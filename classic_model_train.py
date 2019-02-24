@@ -18,6 +18,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.svm import SVC  
 from sklearn.metrics import classification_report, confusion_matrix  
 from sklearn.linear_model import LogisticRegression
+from sklearn import svm
+
 
 # load a clean dataset
 def load_dataset(filename):
@@ -87,12 +89,18 @@ def evalutate_ComplementNB(trainX, trainY, testY, testX):
 	yhat = model.predict(testX)
 	print_metrics(testY,yhat)
 
+def evaluate_SVM(trainX, trainY, testY, testX):
+	print('[info] SVM model')
+	model = svm.LinearSVC().fit(trainX, trainY)
+	yhat = model.predict(testX)
+	print_metrics(testY,yhat)
+
 def run_classic_models_evaluation():
 	trainX, trainY, testY, testX = load_data_classic_models()
 	evalutate_MultinomialNB(trainX, trainY, testY, testX)
 	evalutate_LogisticRegression(trainX, trainY, testY, testX)
 	evalutate_ComplementNB(trainX, trainY, testY, testX)
-
+	evaluate_SVM(trainX, trainY, testY, testX)
 
 # RUN: python classic_model_train.py
 # https://www.kaggle.com/hungdo1291/keras-dnn-multi-class
