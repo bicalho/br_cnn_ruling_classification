@@ -1,5 +1,6 @@
 from pickle import load
 from numpy import array
+import numpy as np
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils.vis_utils import plot_model
@@ -15,10 +16,12 @@ from keras.layers.merge import concatenate
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.naive_bayes import ComplementNB
 from sklearn.metrics import accuracy_score
-from sklearn.svm import SVC  
+from sklearn.svm import SVC 
+from sklearn import svm
+
 from sklearn.metrics import classification_report, confusion_matrix  
 from sklearn.linear_model import LogisticRegression
-from sklearn import svm
+from sklearn.utils.class_weight import compute_class_weight
 
 
 # load a clean dataset
@@ -71,19 +74,19 @@ def print_metrics(y,yhat):
 	print('\n[INFO] classification report:')
 	print(classification_report(y,yhat))  
 
-def evalutate_MultinomialNB(trainX, trainY, testY, testX):
+def evaluate_MultinomialNB(trainX, trainY, testY, testX):
 	print('[info] MultinomialNB model')
 	model = MultinomialNB().fit(trainX, trainY)
 	yhat = model.predict(testX)
 	print_metrics(testY,yhat)
 
-def evalutate_LogisticRegression(trainX, trainY, testY, testX):
+def evaluate_LogisticRegression(trainX, trainY, testY, testX):
 	print('[info] LogisticRegression model')
 	model = LogisticRegression(class_weight='balanced').fit(trainX, trainY)
 	yhat = model.predict(testX)
 	print_metrics(testY,yhat)
 
-def evalutate_ComplementNB(trainX, trainY, testY, testX):
+def evaluate_ComplementNB(trainX, trainY, testY, testX):
 	print('[info] ComplementNB model')
 	model = ComplementNB().fit(trainX, trainY)
 	yhat = model.predict(testX)
@@ -91,16 +94,22 @@ def evalutate_ComplementNB(trainX, trainY, testY, testX):
 
 def evaluate_SVM(trainX, trainY, testY, testX):
 	print('[info] SVM model')
-	model = svm.LinearSVC().fit(trainX, trainY)
+	
+	cw = compute_class_weight("balanced", np.unique(trainY), trainY)
+	print('SVM class weight: ', cw)
+
+	model = svm.LinearSVC(class_weight='balanced').fit(trainX, trainY)
 	yhat = model.predict(testX)
 	print_metrics(testY,yhat)
 
 def run_classic_models_evaluation():
 	trainX, trainY, testY, testX = load_data_classic_models()
-	evalutate_MultinomialNB(trainX, trainY, testY, testX)
-	evalutate_LogisticRegression(trainX, trainY, testY, testX)
-	evalutate_ComplementNB(trainX, trainY, testY, testX)
+	evaluate_MultinomialNB(trainX, trainY, testY, testX)
+	evaluate_LogisticRegression(trainX, trainY, testY, testX)
+	evaluate_ComplementNB(trainX, trainY, testY, testX)
 	evaluate_SVM(trainX, trainY, testY, testX)
+
+run_classic_models_evaluation()
 
 # RUN: python classic_model_train.py
 # https://www.kaggle.com/hungdo1291/keras-dnn-multi-class

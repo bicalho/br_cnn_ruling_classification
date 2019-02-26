@@ -85,7 +85,7 @@ def define_model(length, vocab_size, num_classes=None):
 	plot_model(model, show_shapes=True, to_file='multichannel.png')
 	return model
 
-def run_prediction():
+def run_training():
 	# load training dataset
 	trainLines, trainLabels = load_dataset('processed_data/train.pkl')
 
@@ -110,7 +110,9 @@ def run_prediction():
 
 	# Set class weights
 	labels_dict = {0: 131, 1: 3226, 2: 62, 3: 186}
-	labels_dict = {0: 96.36615811, 1: 10.51317614, 2: 98.28016644, 3: 94.84049931}
+
+	labels_dict = {0: 6.92548077 ,1: 0.27916667, 2: 14.69897959, 3: 4.86655405}
+	#labels_dict = {0: 96.36615811, 1: 10.51317614, 2: 98.28016644, 3: 94.84049931}
 	# Fit the model
 	model.fit([trainX,trainX,trainX], trainLabels, epochs=7, batch_size=16, class_weight=labels_dict)
 	# save the model

@@ -1,0 +1,118 @@
+<html>
+
+<head>
+    <title>Demo Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+    </script>
+</head>
+
+<body>
+
+    <div class="container"><br>
+        <center>
+            <h4>Sentiment Analysis of the decisions issued by the Brazilian Supreme Court (<a target="_blank" href="http://www.stf.jus.br">STF</a>)</h4>
+            <p>This app can classify final ruling sentiments about 
+                <a href="#" role="button" class="popovers" data-container="body" data-toggle="popover" data-placement="top" data-content="The Federal Supreme Court is the highest-instance court in Brazil and a guardian of the Federal Constitution. In civil procedure, among the duties of the Federal Supreme Court is the judgment on extraordinary appeals filed against decisions that: violate a provision of the Federal Constitution; declare the unconstitutionality of a treaty or federal law; or rule valid a local government act or law challenged in view of the Federal Constitution or federal law.">
+                        Extraordinary Appeal
+                </a>
+                of the Supreme Court 
+            </p>
+            <hr>
+        </center>
+    </div>
+
+    
+
+    <div class="container"><br>
+        <div class="row align-items-center justify-content-center">
+            <div class="col-md-2">
+                <h6> Rulings samples </h6>
+                <p style="font-size: 56%">
+                    O Tribunal, por unanimidade e nos termos do voto da Relatora, Ministra Cármen Lúcia (Presidente), acolheu os embargos de declaração para reconsiderar a decisão monocrática de fl. 452 e o acórdão embargado de fls. 463-466, tornando-os sem efeito, edeterminar o regular processamento do recurso. Plenário, sessão virtual de 18 a 24.11.2016
+                    <br><b>Positive Unanimity</b>
+                </p>
+                <p style="font-size: 56%">
+                        Negado provimento ao agravo regimental, nos termos do voto do Relator. Decisão unânime. Ausentes, justificadamente, neste julgamento, a Senhora Ministra Ellen Gracie e o Senhor Ministro Joaquim Barbosa. 2ª Turma, 21.06.2011.
+                    <br><b>Negative Unanimity</b>
+                </p>
+                <p style="font-size: 56%">
+                        Turma, por maioria, negou provimento ao agravo interno, nos termos do voto do Relator, vencido o Ministro Marco Aurélio. 1ª Turma, Sessão Virtual de 18 a 24.11.2016.
+                    <br><b>Negative Majority</b>
+                </p>
+            </div>
+
+            <div class="col-md-8">
+                <form action="" method="post" role="form">
+                    {{ form.csrf }}
+                    <div class="form-group">
+                        <label for="ruling"> <h6>Ruling text</h6></label>
+                        <textarea rows="5" class="form-control" id="ruling" name="ruling"></textarea>
+                    </div>
+                    <br>
+                    <center>
+                        <button type="submit" class="btn btn-primary">Classify</button>
+                    </center>
+                </form>
+                <br>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% if "Error" in messages[0][1]: %}
+                        <div class="alert alert-danger">
+                            {{ messages[0][1] }}
+                        </div>
+                    {% else %}
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Result</h5>
+                                <!-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> -->
+                                <p class="card-text">
+                                    {{ messages[0][1][1] }} <br>
+                                    {% if "Negative Majority" in messages[0][1]: %}   
+                                        <span class="badge badge-danger">Negative</span> 
+                                         <span class="badge badge-secondary">Majority</span>
+                                    {% endif %}
+                                    {% if "Negative Unanimity" in messages[0][1]: %}   
+                                        <span class="badge badge-danger">Negative</span> 
+                                         <span class="badge badge-primary">Unanimity</span>
+                                    {% endif %}
+                                    {% if "Positive Majority" in messages[0][1]: %}   
+                                        <span class="badge badge-success">Positive</span> 
+                                         <span class="badge badge-secondary">Majority</span>
+                                    {% endif %}
+                                    {% if "Positive Unanimity" in messages[0][1]: %}  
+                                        <span class="badge badge-success">Positive</span> 
+                                         <span class="badge badge-primary">Unanimity</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <br><br>
+                    {% endif %}
+                {% endif %}
+                {% endwith %}
+
+                <div>
+                    <b>Legend</b><br>
+                    Sentiment classes:
+                    <span class="badge badge-success">Positive</span>
+                    <span class="badge badge-danger">Negative</span><br>
+                    Mode classes:
+                    <span class="badge badge-primary">Unanimity</span>
+                    <span class="badge badge-secondary">Majority</span>
+                    <br><br>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</body>
+
+</html>

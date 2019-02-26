@@ -1,0 +1,5 @@
+-- Radial sentimentos
+https://direitotec.freshdesk.com/support/solutions/articles/43000348217-radial-de-sentimento
+
+-- Setando o peso das classes no keras
+https://datascience.stackexchange.com/questions/13490/how-to-set-class-weights-for-imbalanced-classes-in-keras 

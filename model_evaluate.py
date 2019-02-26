@@ -56,7 +56,7 @@ def run_evaluation():
 	print(trainX.shape, testX.shape)
 
 	# load the model
-	model = load_model('models/model_multiclasses.h5')
+	model = load_model('models/multichannel_cnn.h5')
 
 	# evaluate model on training dataset
 	loss, acc = model.evaluate([trainX,trainX,trainX], trainLabels, verbose=0)
@@ -69,7 +69,7 @@ def run_evaluation():
 	# print train metrics
 	print('** TRAIN DATA')
 	yhat = model.predict([trainX,trainX,trainX])
-	score = accuracy_score(to_categorical(trainLabels), to_categorical(yhat))
+	score = accuracy_score(to_categorical(trainLabels),to_categorical(yhat))
 	print('\n[INFO] Accuracy: ', score)
 	print('\n[INFO] confusion matrix: ')
 	print(confusion_matrix(to_categorical(trainLabels),to_categorical(yhat)))  
